@@ -1,24 +1,17 @@
+mod part1;
+mod part2;
+
 use std::fs::read_to_string;
 
-fn main() {
-  let input = read_to_string("input.txt").expect(r#"failed to open "input.txt" at package root"#);
-  let (result, _) =
-    input.lines().fold((0u32, 50i32), |(mut zero_count, mut current_dile), instruction| {
-      let distance: i32 =
-        instruction[1..].parse().expect("distance after direction should be valid number");
+use anyhow::Context;
 
-      current_dile = if &instruction[..1] == "L" {
-        (current_dile - distance) % 100
-      } else {
-        (current_dile + distance) % 100
-      };
+fn main() -> anyhow::Result<()> {
+  let input =
+    read_to_string("input.txt").context(r#"failed to open "input.txt" at package root"#)?;
+  let part1_result = part1::run(&input)?;
+  let part2_result = part2::run(&input)?;
+  println!("part1 result {part1_result}");
+  println!("part2 result {part2_result}");
 
-      if current_dile == 0 {
-        zero_count += 1;
-      }
-
-      (zero_count, current_dile)
-    });
-
-  println!("result: {result}");
+  Ok(())
 }

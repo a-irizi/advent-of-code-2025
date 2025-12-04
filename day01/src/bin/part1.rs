@@ -18,9 +18,9 @@ fn run(input: &str) -> anyhow::Result<i32> {
       instruction[1..].parse().context("distance after direction should be valid number")?;
 
     current_dile = if &instruction[..1] == "L" {
-      (current_dile - distance) % 100
+      (current_dile - distance).rem_euclid(100)
     } else {
-      (current_dile + distance) % 100
+      (current_dile + distance).rem_euclid(100)
     };
 
     if current_dile == 0 {

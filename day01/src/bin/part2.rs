@@ -12,31 +12,24 @@ fn main() -> anyhow::Result<()> {
 
 fn run(input: &str) -> anyhow::Result<i32> {
   let mut zero_count = 0;
-  let mut current_dile = 50;
+  let mut current_dial = 50;
   for instruction in input.lines() {
     match parse_instruction_complete(instruction)? {
-      day01::Instruction::Left(mut ticks) => {
-        while ticks > 0 {
-          current_dile -= 1;
-          ticks -= 1;
-
-          if current_dile == 0 {
-            zero_count += 1;
-          } else if current_dile < 0 {
-            current_dile += 100;
-          }
+      day01::Instruction::Left(ticks) => {
+        let ticks_until_zero = if current_dial == 0 { 100 } else { current_dial };
+        if ticks >= ticks_until_zero {
+          zero_count += 1;
+          zero_count += (ticks - ticks_until_zero) / 100;
         }
+        current_dial = (current_dial - ticks).rem_euclid(100);
       }
-      day01::Instruction::Right(mut ticks) => {
-        while ticks > 0 {
-          current_dile += 1;
-          ticks -= 1;
-
-          if current_dile == 100 {
-            zero_count += 1;
-            current_dile = 0;
-          }
+      day01::Instruction::Right(ticks) => {
+        let ticks_until_zero = if current_dial == 0 { 100 } else { 100 - current_dial };
+        if ticks >= ticks_until_zero {
+          zero_count += 1;
+          zero_count += (ticks - ticks_until_zero) / 100;
         }
+        current_dial = (current_dial + ticks).rem_euclid(100);
       }
     }
   }

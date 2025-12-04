@@ -9,6 +9,7 @@ members = ["day01", "utils"]
 
 [workspace.dependencies]
 anyhow = "1.0.100"
+nom = { version = "8.0.0" }
 
 [dependencies]
 anyhow.workspace = true

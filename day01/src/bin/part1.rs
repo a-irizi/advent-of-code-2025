@@ -1,4 +1,4 @@
-use anyhow::Context;
+use day01::parse_instruction_complete;
 use utils::get_input;
 
 fn main() -> anyhow::Result<()> {
@@ -14,13 +14,9 @@ fn run(input: &str) -> anyhow::Result<i32> {
   let mut zero_count = 0;
   let mut current_dile = 50;
   for instruction in input.lines() {
-    let distance: i32 =
-      instruction[1..].parse().context("distance after direction should be valid number")?;
-
-    current_dile = if &instruction[..1] == "L" {
-      (current_dile - distance).rem_euclid(100)
-    } else {
-      (current_dile + distance).rem_euclid(100)
+    current_dile = match parse_instruction_complete(instruction)? {
+      day01::Instruction::Left(ticks) => (current_dile - ticks).rem_euclid(100),
+      day01::Instruction::Right(ticks) => (current_dile + ticks).rem_euclid(100),
     };
 
     if current_dile == 0 {

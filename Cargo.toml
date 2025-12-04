@@ -1,0 +1,14 @@
+[package]
+name = "advent-of-code-2025"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+resolver = "3"
+members = ["day01", "utils"]
+
+[workspace.dependencies]
+anyhow = "1.0.100"
+
+[dependencies]
+anyhow.workspace = true

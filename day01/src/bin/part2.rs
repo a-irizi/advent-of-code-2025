@@ -1,6 +1,16 @@
 use anyhow::Context;
+use utils::get_input;
 
-pub fn run(input: &str) -> anyhow::Result<i32> {
+fn main() -> anyhow::Result<()> {
+  let input = get_input(env!("CARGO_MANIFEST_DIR"))?;
+  let result = run(&input)?;
+
+  println!("Result: {result}");
+
+  Ok(())
+}
+
+fn run(input: &str) -> anyhow::Result<i32> {
   let mut zero_count = 0;
   let mut current_dile = 50;
   for instruction in input.lines() {
@@ -35,8 +45,6 @@ pub fn run(input: &str) -> anyhow::Result<i32> {
 
 #[cfg(test)]
 mod tests {
-  use std::fs::read_to_string;
-
   use super::*;
 
   #[test]
@@ -57,7 +65,7 @@ L82";
 
   #[test]
   fn part2_works() {
-    let input = read_to_string("input.txt").unwrap();
+    let input = get_input(env!("CARGO_MANIFEST_DIR")).unwrap();
     let result = run(&input).unwrap();
     assert_eq!(result, 6689);
   }

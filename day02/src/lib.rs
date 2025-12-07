@@ -1,53 +1,16 @@
+pub mod digits_leading;
+pub mod digits_trailing;
+pub mod part1;
+pub mod part1_leading;
+pub mod part2;
+pub mod part2_leading;
+
 use std::ops::RangeInclusive;
 
 use nom::{
   IResult, Parser, bytes::complete::tag, character::complete, multi::separated_list1,
   sequence::separated_pair,
 };
-
-pub trait AsDigits<T> {
-  fn digits(&self) -> impl Iterator<Item = T>;
-}
-
-pub struct Digits<T> {
-  inner: T,
-}
-
-impl Iterator for Digits<usize> {
-  type Item = usize;
-
-  fn next(&mut self) -> Option<Self::Item> {
-    if self.inner == 0 {
-      return None;
-    }
-
-    let next_digit = self.inner.rem_euclid(10);
-    self.inner = self.inner.div_euclid(10);
-
-    Some(next_digit)
-  }
-}
-
-impl Iterator for Digits<i32> {
-  type Item = i32;
-
-  fn next(&mut self) -> Option<Self::Item> {
-    if self.inner == 0 {
-      return None;
-    }
-
-    let next_digit = self.inner.rem_euclid(10);
-    self.inner = self.inner.div_euclid(10);
-
-    Some(next_digit)
-  }
-}
-
-impl AsDigits<usize> for usize {
-  fn digits(&self) -> impl Iterator<Item = usize> {
-    Digits { inner: *self }
-  }
-}
 
 /// parse puzzle input.
 ///

@@ -9,6 +9,7 @@ members = ["day01", "day02", "utils"]
 
 [workspace.dependencies]
 anyhow = "1.0.100"
+criterion = { version = "0.8.0", features = ["html_reports"] }
 itertools = "0.14.0"
 nom = { version = "8.0.0" }
 

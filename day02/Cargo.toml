@@ -8,8 +8,18 @@ name = "part1"
 [[bin]]
 name = "part2"
 
+[[bench]]
+name = "part1_bench"
+harness = false
+[[bench]]
+name = "part2_bench"
+harness = false
+
 [dependencies]
 anyhow.workspace = true
 itertools.workspace = true
 nom.workspace = true
 utils = { path = "../utils" }
+
+[dev-dependencies]
+criterion.workspace = true

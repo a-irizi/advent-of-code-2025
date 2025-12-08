@@ -1,7 +1,7 @@
 use anyhow::anyhow;
 use itertools::Itertools;
 
-use crate::{digits_trailing::AsDigitsTrailing, parse_input};
+use crate::{POWERS_OF_10, digits_trailing::AsDigitsTrailing, fast_digit_count, parse_input};
 
 /// solve day 02 part 1 puzzle.
 ///
@@ -23,20 +23,17 @@ pub fn run(input: &str) -> anyhow::Result<usize> {
 
   for id_range in id_ranges {
     for id in id_range {
-      let id_digits = id.digits_trailing();
-      let digit_count = id_digits.count_fast();
+      let digit_count = fast_digit_count(id);
       if !digit_count.is_multiple_of(2) {
         continue;
       }
       let chunk_size = digit_count / 2;
 
       let chunk_count = digit_count / chunk_size;
-      let fake_id_chunk = id_digits.take(chunk_size).enumerate().fold(0, |acc, (idx, current)| {
-        acc + current * 10usize.pow(idx.try_into().expect("Got very big exponent"))
-      });
+      let fake_id_chunk = id.rem_euclid(POWERS_OF_10[chunk_size] as usize);
       let mut fake_id = fake_id_chunk;
       for exponent in 1..chunk_count {
-        fake_id += fake_id_chunk * 10usize.pow((chunk_size * exponent) as u32);
+        fake_id += fake_id_chunk * POWERS_OF_10[chunk_size * exponent] as usize;
       }
 
       if fake_id == id {

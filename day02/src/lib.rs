@@ -8,6 +8,33 @@ pub mod part2_parallel;
 
 use std::ops::RangeInclusive;
 
+pub fn fast_digit_count(number: usize) -> usize {
+  (number.ilog10() + 1) as usize
+}
+
+const POWERS_OF_10: [u64; 20] = [
+  1,
+  10,
+  100,
+  1_000,
+  10_000,
+  100_000,
+  1_000_000,
+  10_000_000,
+  100_000_000,
+  1_000_000_000,
+  10_000_000_000,
+  100_000_000_000,
+  1_000_000_000_000,
+  10_000_000_000_000,
+  100_000_000_000_000,
+  1_000_000_000_000_000,
+  10_000_000_000_000_000,
+  100_000_000_000_000_000,
+  1_000_000_000_000_000_000,
+  10_000_000_000_000_000_000,
+];
+
 use nom::{
   IResult, Parser, bytes::complete::tag, character::complete, multi::separated_list1,
   sequence::separated_pair,

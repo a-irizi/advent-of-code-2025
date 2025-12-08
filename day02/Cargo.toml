@@ -20,6 +20,7 @@ anyhow.workspace = true
 itertools.workspace = true
 nom.workspace = true
 utils = { path = "../utils" }
+rayon.workspace = true
 
 [dev-dependencies]
 criterion.workspace = true

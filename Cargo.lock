@@ -214,6 +214,15 @@ dependencies = [
  "criterion",
  "itertools 0.14.0",
  "nom",
+ "rayon",
+ "utils",
+]
+
+[[package]]
+name = "day03"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
  "utils",
 ]
 

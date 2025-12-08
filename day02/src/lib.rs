@@ -4,6 +4,7 @@ pub mod part1;
 pub mod part1_leading;
 pub mod part2;
 pub mod part2_leading;
+pub mod part2_parallel;
 
 use std::ops::RangeInclusive;
 

@@ -5,13 +5,19 @@ edition = "2024"
 
 [workspace]
 resolver = "3"
-members = ["day01", "day02", "utils"]
+members = ["day01", "day02", "day03", "utils"]
 
 [workspace.dependencies]
 anyhow = "1.0.100"
 criterion = { version = "0.8.0", features = ["html_reports"] }
 itertools = "0.14.0"
 nom = { version = "8.0.0" }
+rayon = "1.11.0"
 
 [dependencies]
 anyhow.workspace = true
+
+
+[profile.profiling]
+inherits = "release"
+debug = true

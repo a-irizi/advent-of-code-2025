@@ -26,15 +26,18 @@ pub fn run(input: &str) -> anyhow::Result<usize> {
       let id_digits = id.digits_trailing();
       let digit_count = id_digits.count_fast();
       for chunk_size in 1..=digit_count / 2 {
-        if digit_count % chunk_size != 0 {
+        if !digit_count.is_multiple_of(chunk_size) {
           continue;
         }
-        let fake_id = id_digits.take(chunk_size).cycle().take(digit_count).enumerate().fold(
-          0,
-          |acc, (idx, current)| {
+        let chunk_count = digit_count / chunk_size;
+        let fake_id_chunk =
+          id_digits.take(chunk_size).enumerate().fold(0, |acc, (idx, current)| {
             acc + current * 10usize.pow(idx.try_into().expect("Got very big exponent"))
-          },
-        );
+          });
+        let mut fake_id = fake_id_chunk;
+        for exponent in 1..chunk_count {
+          fake_id += fake_id_chunk * 10usize.pow((chunk_size * exponent) as u32);
+        }
         if fake_id == id {
           total += id;
           continue 'id;

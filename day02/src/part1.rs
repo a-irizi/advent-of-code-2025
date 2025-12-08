@@ -28,12 +28,17 @@ pub fn run(input: &str) -> anyhow::Result<usize> {
       if !digit_count.is_multiple_of(2) {
         continue;
       }
-      let fake_id = id_digits.take(digit_count / 2).cycle().take(digit_count).enumerate().fold(
-        0,
-        |acc, (idx, current)| {
-          acc + current * 10usize.pow(idx.try_into().expect("Found too big exponent"))
-        },
-      );
+      let chunk_size = digit_count / 2;
+
+      let chunk_count = digit_count / chunk_size;
+      let fake_id_chunk = id_digits.take(chunk_size).enumerate().fold(0, |acc, (idx, current)| {
+        acc + current * 10usize.pow(idx.try_into().expect("Got very big exponent"))
+      });
+      let mut fake_id = fake_id_chunk;
+      for exponent in 1..chunk_count {
+        fake_id += fake_id_chunk * 10usize.pow((chunk_size * exponent) as u32);
+      }
+
       if fake_id == id {
         total += id;
       }

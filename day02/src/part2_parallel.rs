@@ -6,7 +6,10 @@ use std::sync::{
 use anyhow::anyhow;
 use rayon::prelude::*;
 
-use crate::{POWERS_OF_10, digits_trailing::AsDigitsTrailing, fast_digit_count, parse_input};
+use crate::{
+  DIVISORS_BY_CHUNK_SIZE, POWERS_OF_10, digits_trailing::AsDigitsTrailing, fast_digit_count,
+  parse_input,
+};
 
 /// solve day 02 part 2 puzzle.
 ///
@@ -30,10 +33,7 @@ pub fn run(input: &str) -> anyhow::Result<usize> {
     'id: for id in id_range {
       let id_digits = id.digits_trailing();
       let digit_count = id_digits.count_fast();
-      for chunk_size in 1..=digit_count / 2 {
-        if !digit_count.is_multiple_of(chunk_size) {
-          continue;
-        }
+      for &chunk_size in DIVISORS_BY_CHUNK_SIZE[digit_count] {
         let chunk_count = digit_count / chunk_size;
         let fake_id_chunk = id.rem_euclid(POWERS_OF_10[chunk_size] as usize);
         let mut fake_id = fake_id_chunk;

@@ -1,7 +1,6 @@
 use anyhow::anyhow;
-use itertools::Itertools;
 
-use crate::{POWERS_OF_10, digits_trailing::AsDigitsTrailing, fast_digit_count, parse_input};
+use crate::{POWERS_OF_10, fast_digit_count, parse_input};
 
 /// solve day 02 part 1 puzzle.
 ///
@@ -29,12 +28,9 @@ pub fn run(input: &str) -> anyhow::Result<usize> {
       }
       let chunk_size = digit_count / 2;
 
-      let chunk_count = digit_count / chunk_size;
       let fake_id_chunk = id.rem_euclid(POWERS_OF_10[chunk_size] as usize);
-      let mut fake_id = fake_id_chunk;
-      for exponent in 1..chunk_count {
-        fake_id += fake_id_chunk * POWERS_OF_10[chunk_size * exponent] as usize;
-      }
+      let fake_id =
+        fake_id_chunk * ((POWERS_OF_10[digit_count] - 1) / (POWERS_OF_10[chunk_size] - 1)) as usize;
 
       if fake_id == id {
         total += id;

@@ -6,6 +6,9 @@ edition = "2024"
 [[bin]]
 name = "part1"
 
+[[bin]]
+name = "part2"
+
 [dependencies]
 anyhow.workspace = true
 utils = { path = "../utils" }

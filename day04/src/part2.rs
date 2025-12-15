@@ -1,105 +1,101 @@
 use std::collections::HashSet;
 
-use crate::is_paper_roll;
+use crate::{coordinates::Coordinate, is_paper_roll_char};
 
 pub fn run(input: &str) -> usize {
-  let mut removed_rolls: HashSet<(usize, usize)> = HashSet::new();
-  let mut total_count = 0;
+  let mut paper_rolls = get_paper_rolls(input);
+  let mut total_accessed_paper_rolls = 0;
   loop {
-    let accessible_rolls = get_accessible_rolls(input, &removed_rolls);
-    let no_accessible_rolls_left = accessible_rolls.is_empty();
-    if no_accessible_rolls_left {
+    let accessed_paper_rolls = remove_accessible_paper_rolls(&mut paper_rolls);
+    if accessed_paper_rolls == 0 {
       break;
     }
-    total_count += accessible_rolls.len();
-    for roll_coordinates in accessible_rolls {
-      removed_rolls.insert(roll_coordinates);
+    total_accessed_paper_rolls += accessed_paper_rolls;
+  }
+
+  total_accessed_paper_rolls
+}
+
+fn get_paper_rolls(input: &str) -> HashSet<Coordinate> {
+  let mut coordinates = HashSet::new();
+  for (row_index, row) in input.lines().enumerate() {
+    for (column_index, position) in row.chars().enumerate() {
+      if is_paper_roll_char(position) {
+        coordinates.insert(Coordinate::new(row_index as u8, column_index as u8));
+      }
+    }
+  }
+
+  coordinates
+}
+
+fn remove_accessible_paper_rolls(paper_rolls: &mut HashSet<Coordinate>) -> usize {
+  let accessible_paper_rolls = get_accessible_paper_rolls(paper_rolls);
+  for accessible_paper_roll in &accessible_paper_rolls {
+    paper_rolls.remove(accessible_paper_roll);
+  }
+
+  accessible_paper_rolls.len()
+}
+
+fn get_accessible_paper_rolls(paper_rolls: &HashSet<Coordinate>) -> Vec<Coordinate> {
+  let mut accessible_paper_rolls = vec![];
+
+  for paper_roll in paper_rolls {
+    if is_paper_roll_accessible(paper_roll, paper_rolls) {
+      accessible_paper_rolls.push(paper_roll.clone());
     }
   }
 
-  total_count
+  accessible_paper_rolls
 }
 
-fn get_accessible_rolls<S: ::std::hash::BuildHasher>(
-  input: &str,
-  removed_rolls: &HashSet<(usize, usize), S>,
-) -> Vec<(usize, usize)> {
-  let mut accessible_rolls = vec![];
-  let mut prev_row: Option<&str> = None;
-  let mut rows = input.lines().enumerate().peekable();
+fn is_paper_roll_accessible(paper_roll: &Coordinate, paper_rolls: &HashSet<Coordinate>) -> bool {
+  let mut adjacent_paper_rolls_count = 0;
 
-  while let Some((row_index, row)) = rows.next() {
-    let next_row = rows.peek().map(|row| row.1);
-    for column_index in 0..row.len() {
-      let cell_is_not_a_roll = !row.get(column_index..column_index + 1).is_some_and(is_paper_roll);
-      let roll_already_removed = removed_rolls.contains(&(row_index, column_index));
-      if cell_is_not_a_roll || roll_already_removed {
-        continue;
-      }
-
-      let count =
-        count_adjacent_paper_rolls(prev_row, row, next_row, row_index, column_index, removed_rolls);
-
-      if count < 4 {
-        accessible_rolls.push((row_index, column_index));
-      }
-    }
-    prev_row = Some(row);
-  }
-
-  accessible_rolls
-}
-
-pub fn count_adjacent_paper_rolls<S: ::std::hash::BuildHasher>(
-  prev_row: Option<&str>,
-  row: &str,
-  next_row: Option<&str>,
-  row_index: usize,
-  column_index: usize,
-  removed_rolls: &HashSet<(usize, usize), S>,
-) -> usize {
-  let prev_count = prev_row
-    .map(|row| {
-      count_3_existing_paper_rolls(row, row_index.saturating_sub(1), column_index, removed_rolls)
-    })
-    .unwrap_or_default();
-  let side_count =
-    count_3_existing_paper_rolls(row, row_index, column_index, removed_rolls).saturating_sub(1);
-  let next_count = next_row
-    .map(|row| count_3_existing_paper_rolls(row, row_index + 1, column_index, removed_rolls))
-    .unwrap_or_default();
-
-  prev_count + side_count + next_count
-}
-
-fn count_3_existing_paper_rolls<S: ::std::hash::BuildHasher>(
-  row: &str,
-  row_index: usize,
-  column_index: usize,
-  removed_rolls: &HashSet<(usize, usize), S>,
-) -> usize {
-  let mut count = 0;
-
-  if column_index > 0
-    && !removed_rolls.contains(&(row_index, column_index - 1))
-    && row.get(column_index - 1..column_index).is_some_and(is_paper_roll)
+  if let Some(top) = paper_roll.top()
+    && paper_rolls.contains(&top)
   {
-    count += 1;
+    adjacent_paper_rolls_count += 1;
   }
 
-  if !removed_rolls.contains(&(row_index, column_index))
-    && row.get(column_index..column_index + 1).is_some_and(is_paper_roll)
+  if let Some(top_right) = paper_roll.top_right()
+    && paper_rolls.contains(&top_right)
   {
-    count += 1;
+    adjacent_paper_rolls_count += 1;
   }
 
-  if !removed_rolls.contains(&(row_index, column_index + 1))
-    && row.get(column_index + 1..column_index + 2).is_some_and(is_paper_roll)
+  if paper_rolls.contains(&paper_roll.right()) {
+    adjacent_paper_rolls_count += 1;
+  }
+
+  if paper_rolls.contains(&paper_roll.bottom_right()) {
+    adjacent_paper_rolls_count += 1;
+  }
+
+  if paper_rolls.contains(&paper_roll.bottom()) {
+    adjacent_paper_rolls_count += 1;
+  }
+
+  if let Some(bottom_left) = paper_roll.bottom_left()
+    && paper_rolls.contains(&bottom_left)
   {
-    count += 1;
+    adjacent_paper_rolls_count += 1;
   }
 
-  count
+  if let Some(left) = paper_roll.left()
+    && paper_rolls.contains(&left)
+  {
+    adjacent_paper_rolls_count += 1;
+  }
+
+  if let Some(top_left) = paper_roll.top_left()
+    && paper_rolls.contains(&top_left)
+  {
+    adjacent_paper_rolls_count += 1;
+  }
+
+  adjacent_paper_rolls_count < 4
 }
 
 #[cfg(test)]

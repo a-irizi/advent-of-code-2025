@@ -1,0 +1,22 @@
+[package]
+name = "day04"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "part1"
+
+[[bin]]
+name = "part2"
+
+[[bench]]
+name = "part2_bench"
+harness = false
+
+[dependencies]
+utils = { path = "../utils" }
+anyhow.workspace = true
+
+
+[dev-dependencies]
+criterion.workspace = true

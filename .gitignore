@@ -1,4 +1,3 @@
 /target
-perf.data
-profile.json
-profile.json.gz
+perf.data*
+profile.json*

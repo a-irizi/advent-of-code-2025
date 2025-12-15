@@ -59,18 +59,10 @@ fn get_accessible_paper_rolls(grid_width: usize, paper_rolls: &BitVector) -> Vec
 }
 
 fn is_paper_roll_accessible(grid_width: usize, paper_roll: usize, paper_rolls: &BitVector) -> bool {
-  get_possible_adjacent_paper_rolls(grid_width, paper_rolls, paper_roll) < 4
-}
-
-fn get_possible_adjacent_paper_rolls(
-  grid_width: usize,
-  paper_rolls: &BitVector,
-  paper_roll_linear_position: usize,
-) -> usize {
   let mut adjacent_paper_rolls_count = 0;
 
-  let row = paper_roll_linear_position / grid_width;
-  let column = paper_roll_linear_position % grid_width;
+  let row = paper_roll / grid_width;
+  let column = paper_roll % grid_width;
   let coordinates = Coordinate::new(row, column);
 
   if let Some(adjacent_roll) = coordinates.top()
@@ -149,7 +141,7 @@ fn get_possible_adjacent_paper_rolls(
     adjacent_paper_rolls_count += 1;
   }
 
-  adjacent_paper_rolls_count
+  adjacent_paper_rolls_count < 4
 }
 
 #[cfg(test)]

@@ -17,6 +17,7 @@ harness = false
 utils = { path = "../utils" }
 anyhow.workspace = true
 rustc-hash.workspace = true
+bitvector.workspace = true
 
 
 [dev-dependencies]

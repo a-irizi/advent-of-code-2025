@@ -14,6 +14,7 @@ itertools = "0.14.0"
 nom = { version = "8.0.0" }
 rayon = "1.11.0"
 rustc-hash = "2.1.1"
+bitvector = { version = "0.1.5" }
 
 [dependencies]
 anyhow.workspace = true

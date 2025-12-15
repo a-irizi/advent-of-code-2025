@@ -13,6 +13,7 @@ criterion = { version = "0.8.1", features = ["html_reports"] }
 itertools = "0.14.0"
 nom = { version = "8.0.0" }
 rayon = "1.11.0"
+rustc-hash = "2.1.1"
 
 [dependencies]
 anyhow.workspace = true

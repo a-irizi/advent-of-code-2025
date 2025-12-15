@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use rustc_hash::FxHashSet as HashSet;
 
 use crate::{coordinates::Coordinate, is_paper_roll_char};
 
@@ -17,7 +17,7 @@ pub fn run(input: &str) -> usize {
 }
 
 fn get_paper_rolls(input: &str) -> HashSet<Coordinate> {
-  let mut coordinates = HashSet::new();
+  let mut coordinates = HashSet::default();
   for (row_index, row) in input.lines().enumerate() {
     for (column_index, position) in row.chars().enumerate() {
       if is_paper_roll_char(position) {

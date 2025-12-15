@@ -9,6 +9,14 @@ name = "part1"
 [[bin]]
 name = "part2"
 
+[[bench]]
+name = "part2_bench"
+harness = false
+
 [dependencies]
 anyhow.workspace = true
 utils = { path = "../utils" }
+rayon.workspace = true
+
+[dev-dependencies]
+criterion.workspace = true
